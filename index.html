@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Makhraj dan Sifat Huruf Hijaiyah</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .question-card {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .question-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+        .options li {
+            margin-bottom: 10px;
+        }
+        .options label {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border: 1px solid #dcdcdc;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .options label:hover {
+            background-color: #eef7fc;
+            border-color: #3498db;
+        }
+        .options input[type="radio"] {
+            margin-right: 12px;
+        }
+        /* Style Feedback Jawaban */
+        .correct-answer {
+            background-color: #d4edda !important;
+            border-color: #28a745 !important;
+            color: #155724;
+            font-weight: bold;
+        }
+        .wrong-answer {
+            background-color: #f8d7da !important;
+            border-color: #dc3545 !important;
+            color: #721c24;
+        }
+        .arabic {
+            font-family: 'Traditional Arabic', 'Amiri', 'Segoe UI', serif;
+            font-size: 1.2em;
+            direction: rtl;
+            unicode-bidi: embed;
+        }
+        #submit-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 30px;
+        }
+        #submit-btn:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background: #27ae60;
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Kuis Tajwid: Makhraj & Sifat Huruf</h1>
+    <form id="quizForm">
+
+        <!-- Soal 1 -->
+        <div class="question-card" id="q1">
+            <div class="question-title">1. Tenggorokan bawah merupakan tempat keluarnya huruf-huruf ....</div>
+            <ul class="options">
+                <li><label><input type="radio" name="q1" value="A"> A. ع ح</label></li>
+                <li><label><input type="radio" name="q1" value="B"> B. غ خ</label></li>
+                <li><label><input type="radio" name="q1" value="C" data-correct="true"> C. ء ه</label></li>
+                <li><label><input type="radio" name="q1" value="D"> D. ق ك</label></li>
+            </ul>
+        </div>
+
+        <!-- Soal 2 -->
+        <div class="question-card" id="q2">
+            <div class="question-title">2. Menyentuhkan punggung ujung lidah ke pangkal dua gigi seri atas merupakan tempat keluarnya huruf-huruf ....</div>
+            <ul class="options">
+                <li><label><input type="radio" name="q2" value="A"> A. ج ش ي</label></li>
+                <li><label><input type="radio" name="q2" value="B" data-correct="true"> B. ت د ط</label></li>
+                <li><label><input type="radio" name="q2" value="C"> C. ص ز س</label></li>
+                <li><label><input type="radio" name="q2" value="D"> D. ل ن ر</label></li>
+            </ul>
+        </div>
+
+        <!-- Soal 3 -->
+        <div class="question-card" id="q3">
+            <div class="question-title">3. Huruf <span class="arabic">ط</span> pada kata <span class="arabic">طُغۡيَــٰـنًا</span> memiliki sifat huruf ....</div>
+            <ul class="options">
+                <li><label><input type="radio" name="q3" value="A"> A. ٱلإصمات , ٱلإطباق , ٱلإستعلاء , ٱلرخاوة , ٱلجهر</label></li>
+                <li><label><input type="radio" name="q3" value="B"> B. ٱلإصمات , ٱلإطباق , ٱلإستعلاء , ٱلتوسط , ٱلجهر</label></li>
+                <li><label><input type="radio" name="q3" value="C"> C. ٱلإصمات , ٱلإطباق , ٱلإستفال , ٱلـشدة , ٱلجهر</label></li>
+                <li><label><input type="radio" name="q3" value="D" data-correct="true"> D. ٱلإصمات , ٱلإطباق , ٱلإستعلاء , ٱلـشدة , ٱلجهر</label></li>
+            </ul>
+        </div>
+
+        <!-- Soal 4 -->
+        <div class="question-card" id="q4">
+            <div class="question-title">4. Hal penting yang harus diperhatikan dalam pengucapan huruf <span class="arabic">ث</span> yaitu ....</div>
+            <ul class="options">
+                <li><label><input type="radio" name="q4" value="A" data-correct="true"> A. merasakan betul keluarnya ujung lidah sedikit sambil menggesek halus/kendor ke dinding gigi depan atas serta berdesis</label></li>
+                <li><label><input type="radio" name="q4" value="B"> B. dalam mengucapkannya ditekan sehingga mengeluarkan angin</label></li>
+                <li><label><input type="radio" name="q4" value="C"> C. sudah tidak keluar melampaui gigi depan</label></li>
+                <li><label><input type="radio" name="q4" value="D"> D. tidak berdesis</label></li>
+            </ul>
+        </div>
+
+        <!-- Soal 5 -->
+        <div class="question-card" id="q5">
+            <div class="question-title">5. Huruf yang keluar dari <span class="arabic">وَسۡطُ ٱلِّلسَانِ</span> adalah ….</div>
+            <ul class="options">
+                <li><label><input type="radio" name="q5" value="A"> A. ر</label></li>
+                <li><label><input type="radio" name="q5" value="B"> B. ض</label></li>
+                <li><label><input type="radio" name="q5" value="C" data-correct="true"> C. ش</label></li>
+                <li><label><input type="radio" name="q5" value="D"> D. ق</label></li>
+            </ul>
+        </div>
+
+        <!-- Soal 6 -->
+        <div class="question-card" id="q6">
+            <div class="question-title">6. Kelompok huruf <span class="arabic">ٱلّlsان</span> yang semuanya memiliki sifat <span class="arabic">ٱلشِّدَّةُ</span> adalah .…</div>
+            <ul class="options">
+                <li><label><input type="radio" name="q6" value="A"> A. ر - ن - ل</label></li>
+                <li><label><input type="radio" name="q6" value="B"> B. ظ - ذ - ث</label></li>
+                <li><label><input type="radio" name="q6" value="C" data-correct="true"> C. ط - د - ت</label></li>
+                <li><label><input type="radio" name="q6" value="D"> D. ي - ش - ج</label></li>
+            </ul>
+        </div>
+
+        <!-- Soal 7 -->
+        <div class="question-card" id="q7">
+            <div class="question-title">7. Huruf Hijaiyah yang memiliki tujuh sifat adalah .…</div>
+            <ul class="options">
+                <li><label><input type="radio" name="q7" value="A"> A. ل</label></li>
+                <li><label><input type="radio" name="q7" value="B" data-correct="true"> B. ر</label></li>
+                <li><label><input type="radio" name="q7" value="C"> C. غ</label></li>
+                <li><label><input type="radio" name="q7" value="D"> D. خ</label></li>
+            </ul>
+        </div>
+
+        <!-- Soal 8 -->
+        <div class="question-card" id="q8">
+            <div class="question-title">8. Sifat <span class="arabic">ٱلۡإِسۡتِطَالَهُ</span> artinya memanjang, yaitu .…</div>
+            <ul class="options">
+                <li><label><input type="radio" name="q8" value="A" data-correct="true"> A. menggelayutkan suara dari pangkal salah satu sisi lidah sampai ujungnya</label></li>
+                <li><label><input type="radio" name="q8" value="B"> B. terangkatnya pangkal lidah ke langit-langit</label></li>
+                <li><label><input type="radio" name="q8" value="C"> C. melekatnya sebagian besar permukaan lidah ke langit-langit</label></li>
+                <li><label><input type="radio" name="q8" value="D"> D. melengketkan sisi lidah ke gigi geraham</label></li>
+            </ul>
+        </div>
+
+        <!-- Soal 9 -->
+        <div class="question-card" id="q9">
+            <div class="question-title">9. Tiga sifat yang dimiliki oleh huruf <span class="arabic">ث</span> adalah .…</div>
+            <ul class="options">
+                <li><label><input type="radio" name="q9" value="A"> A. ٱلرّخاوة - ٱلاصمات - ٱلجهر</label></li>
+                <li><label><input type="radio" name="q9" value="B"> B. ٱلشّدّة - ٱلإنفتاح – ٱلإذلاق</label></li>
+                <li><label><input type="radio" name="q9" value="C"> C. ٱلاصمات - ٱلتّوسط - ٱلجهر</label></li>
+                <li><label><input type="radio" name="q9" value="D" data-correct="true"> D. ٱلإستفال - ٱلرّخاوة – ٱلـهمس</label></li>
+            </ul>
+        </div>
+
+        <!-- Soal 10 -->
+        <div class="question-card" id="q10">
+            <div class="question-title">10. Huruf-huruf yang keluar dari <span class="arabic">ٱللسان ٱقصى</span> adalah ....</div>
+            <ul class="options">
+                <li><label><input type="radio" name="q10" value="A"> A. ع</label></li>
+                <li><label><input type="radio" name="q10" value="B" data-correct="true"> B. ق</label></li>
+                <li><label><input type="radio" name="q10" value="C"> C. ه</label></li>
+                <li><label><input type="radio" name="q10" value="D"> D. ح</label></li>
+            </ul>
+        </div>
+
+        <!-- Soal 11 -->
+        <div class="question-card" id="q11">
+            <div class="question-title">11. Kesalahan yang sering terjadi saat mengucapkan huruf <span class="arabic">غ</span> adalah ....</div>
+            <ul class="options">
+                <li><label><input type="radio" name="q11" value="A"> A. bergeser ke bagian tengah atau bawah tenggorokan</label></li>
+                <li><label><input type="radio" name="q11" value="B" data-correct="true"> B. terlalu bergetar mirip خ</label></li>
+                <li><label><input type="radio" name="q11" value="C"> C. bergeser ke bagian tengah lidah</label></li>
+                <li><label><input type="radio" name="q11" value="D"> D. naik ke pangkal lidah</label></li>
+            </ul>
+        </div>
+
+        <!-- Soal 12 -->
+        <div class="question-card" id="q12">
+            <div class="question-title">12. Huruf yang mempunyai sifat <span class="arabic">ٱلجهر ، ٱلانفتاح ، ٱلاستفال ، ٱلصفیر</span> adalah ....</div>
+            <ul class="options">
+                <li><label><input type="radio" name="q12" value="A"> A. ب</label></li>
+                <li><label><input type="radio" name="q12" value="B" data-correct="true"> B. ز</label></li>
+                <li><label><input type="radio" name="q12" value="C"> C. ف</label></li>
+                <li><label><input type="radio" name="q12" value="D"> D. ل</label></li>
+            </ul>
+        </div>
+
+        <!-- Soal 13 -->
+        <div class="question-card" id="q13">
+            <div class="question-title">13. Sifat huruf <span class="arabic">ٱللين</span> adalah ....</div>
+            <ul class="options">
+                <li><label><input type="radio" name="q13" value="A" data-correct="true"> A. huruf keluar dengan lemah/lembut tanpa memerlukan desakan yang kuat pada lidah</label></li>
+                <li><label><input type="radio" name="q13" value="B"> B. memanjangkan/menggelayutkan suara dari pangkal salah satu pinggir lidah sampai ujungnya</label></li>
+                <li><label><input type="radio" name="q13" value="C"> C. pengucapan huruf yang disertai tersebarnya angin yang keluar dari dalam mulut</label></li>
+                <li><label><input type="radio" name="q13" value="D"> D. suara tambahan yang menyerupai suara burung yang keluar antara dua gigi depan dan ujung lidah.</label></li>
+            </ul>
+        </div>
+
+        <!-- Soal 14 -->
+        <div class="question-card" id="q14">
+            <div class="question-title">14. Huruf-huruf yang keluar dari <span class="arabic">أَدۡنَى ٱلۡحَلۡقِ</span> yaitu ....</div>
+            <ul class="options">
+                <li><label><input type="radio" name="q14" value="A" data-correct="true"> A. خ غ</label></li>
+                <li><label><input type="radio" name="q14" value="B"> B. ء ه</label></li>
+                <li><label><input type="radio" name="q14" value="C"> C. ح ع</label></li>
+                <li><label><input type="radio" name="q14" value="D"> D. ء ح</label></li>
+            </ul>
+        </div>
+
+        <!-- Soal 15 -->
+        <div class="question-card" id="q15">
+            <div class="question-title">15. Makhraj dari huruf <span class="arabic">م</span> adalah .…</div>
+            <ul class="options">
+                <li><label><input type="radio" name="q15" value="A" data-correct="true"> A. mempertemukan kedua perut bibir bagian luar</label></li>
+                <li><label><input type="radio" name="q15" value="B"> B. mempertemukan ujung gigi seri depan atas dengan perut bibir bawah</label></li>
+                <li><label><input type="radio" name="q15" value="C"> C. mengumpulkan kedua bibir</label></li>
+                <li><label><input type="radio" name="q15" value="D"> D. mempertemukan kedua perut bibir bagian dalam</label></li>
+            </ul>
+        </div>
+
+        <!-- Soal 16 -->
+        <div class="question-card" id="q16">
+            <div class="question-title">16. Sifat-sifat <span class="arabic">ٱلتَّوَسُّط - ٱلإسۡتِفَال ٱلإِنفِتَاح – ٱلإِذۡلاَق</span> dimiliki oleh huruf .…</div>
+            <ul class="options">
+                <li><label><input type="radio" name="q16" value="A"> A. ز</label></li>
+                <li><label><input type="radio" name="q16" value="B"> B. ذ</label></li>
+                <li><label><input type="radio" name="q16" value="C"> C. و</label></li>
+                <li><label><input type="radio" name="q16" value="D" data-correct="true"> D. ر</label></li>
+            </ul>
+        </div>
+
+        <button type="button" id="submit-btn" onclick="calculateScore()">Selesai & Hitung Nilai</button>
+    </form>
+
+    <div id="result"></div>
+</div>
+
+<script>
+    const totalQuestions = 16;
+
+    document.querySelectorAll('.options input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const questionName = this.name;
+            const card = document.getElementById(questionName);
+            const allRadiosInQuestion = card.querySelectorAll('input[type="radio"]');
+
+            // Kunci pilihan langsung agar tidak bisa diganti
+            allRadiosInQuestion.forEach(r => r.disabled = true);
+
+            // Beri jeda 1 detik (1000 milidetik) sebelum menampilkan feedback jawaban
+            setTimeout(() => {
+                showAnswerFeedback(card);
+            }, 1000);
+        });
+    });
+
+    function showAnswerFeedback(questionCard) {
+        const labels = questionCard.querySelectorAll('.options label');
+        labels.forEach(label => {
+            const input = label.querySelector('input');
+            if (input.getAttribute('data-correct') === 'true') {
+                label.classList.add('correct-answer');
+            } else if (input.checked) {
+                label.classList.add('wrong-answer');
+            }
+        });
+    }
+
+    function calculateScore() {
+        let answeredCount = 0;
+        let correctAnswers = 0;
+
+        for (let i = 1; i <= totalQuestions; i++) {
+            const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
+            if (selectedOption) {
+                answeredCount++;
+                if (selectedOption.getAttribute('data-correct') === 'true') {
+                    correctAnswers++;
+                }
+            }
+        }
+
+        if (answeredCount < totalQuestions) {
+            alert(`Harap jawab semua soal terlebih dahulu! Baru dijawab: ${answeredCount}/${totalQuestions}`);
+            return;
+        }
+
+        let finalScore = 0;
+
+        if (correctAnswers === totalQuestions) {
+            finalScore = 100;
+        } else {
+            let rawScore = (correctAnswers / totalQuestions) * 100;
+            finalScore = Math.round(rawScore / 5) * 5;
+        }
+
+        const resultDiv = document.getElementById('result');
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = `
+            <h2>Hasil Kuis Anda</h2>
+            <p>Jawaban Benar: <strong>${correctAnswers}</strong> dari ${totalQuestions} Soal</p>
+            <p style="font-size: 2em; font-weight: bold;">Nilai Keseluruhan: ${finalScore} / 100</p>
+        `;
+
+        resultDiv.scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
