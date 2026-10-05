@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kelola Jadwal Ruangan</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; }
+    .card-custom { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+    .btn-gradient { background: linear-gradient(135deg, #198754, #20c997); color: white; border: none; }
+    .btn-gradient:hover { color: white; opacity: 0.9; }
+  </style>
+</head>
+<body>
+
+<div class="container py-4">
+  <div class="row g-4">
+    <!-- FORM TAMBAH JADWAL -->
+    <div class="col-lg-4">
+      <div class="card card-custom p-4 sticky-top" style="top: 20px;">
+        <h5 class="fw-bold text-success mb-3"><i class="fa-solid fa-square-plus me-2"></i>Tambah Jadwal Baru</h5>
+        <form id="addForm" onsubmit="submitForm(event, 'add')">
+          <div class="mb-2">
+            <label class="form-label small fw-bold">Ruangan</label>
+            <select id="add_ruangan" class="form-select form-select-sm" required>
+              <option value="">-- Pilih --</option>
+              <option value="RQ 1">RQ 1</option><option value="RQ 2">RQ 2</option>
+              <option value="RQ 3">RQ 3</option><option value="RQ 4">RQ 4</option>
+              <option value="RQ 5">RQ 5</option><option value="RQ 6">RQ 6</option>
+              <option value="RQ 7">RQ 7</option>
+            </select>
+          </div>
+          <div class="mb-2">
+            <label class="form-label small fw-bold">Hari</label>
+            <select id="add_hari" class="form-select form-select-sm" required>
+              <option value="">-- Pilih --</option>
+              <option value="Senin">Senin</option><option value="Selasa">Selasa</option>
+              <option value="Rabu">Rabu</option><option value="Kamis">Kamis</option>
+              <option value="Jumat">Jumat</option>
+            </select>
+          </div>
+          <div class="mb-2">
+            <label class="form-label small fw-bold">Jam Kegiatan</label>
+            <input type="text" id="add_jam" class="form-control form-control-sm" placeholder="Contoh: 08.00-10.00" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Pengajar (Ustadzah)</label>
+            <input type="text" id="add_pengajar" class="form-control form-control-sm" placeholder="Nama Ustadzah" required>
+          </div>
+          <button type="submit" id="btnAddSubmit" class="btn btn-gradient w-100 fw-bold py-2">
+            <i class="fa-solid fa-paper-plane me-1"></i> Simpan Jadwal
+          </button>
+        </form>
+        <div id="addAlert" class="mt-3"></div>
+      </div>
+    </div>
+
+    <!-- TABEL KELOLA JADWAL -->
+    <div class="col-lg-8">
+      <div class="card card-custom p-3">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-list-check me-2"></i>Daftar & Kelola Jadwal</h5>
+          <button class="btn btn-sm btn-outline-primary" onclick="loadJadwal()"><i class="fa-solid fa-rotate me-1"></i> Refresh</button>
+        </div>
+        <input type="text" id="searchInput" class="form-control mb-3" placeholder="Cari Hari..." onkeyup="filterJadwal()">
+        
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Ruang</th>
+                <th>Hari</th>
+                <th>Jam</th>
+                <th>Pengajar</th>
+                <th class="text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="manageTableBody">
+              <tr><td colspan="5" class="text-center py-4">Memuat data...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDIT JADWAL -->
+<div class="modal fade" id="editModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold"><i class="fa-solid fa-pen-to-square me-2"></i>Ubah Jadwal</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="editForm" onsubmit="submitForm(event, 'update')">
+          <input type="hidden" id="edit_id">
+          <div class="mb-2">
+            <label class="form-label small fw-bold">Ruangan</label>
+            <select id="edit_ruangan" class="form-select" required>
+              <option value="RQ 1">RQ 1</option><option value="RQ 2">RQ 2</option>
+              <option value="RQ 3">RQ 3</option><option value="RQ 4">RQ 4</option>
+              <option value="RQ 5">RQ 5</option><option value="RQ 6">RQ 6</option>
+              <option value="RQ 7">RQ 7</option>
+            </select>
+          </div>
+          <div class="mb-2">
+            <label class="form-label small fw-bold">Hari</label>
+            <select id="edit_hari" class="form-select" required>
+              <option value="Senin">Senin</option><option value="Selasa">Selasa</option>
+              <option value="Rabu">Rabu</option><option value="Kamis">Kamis</option>
+              <option value="Jumat">Jumat</option>
+            </select>
+          </div>
+          <div class="mb-2">
+            <label class="form-label small fw-bold">Jam Kegiatan</label>
+            <input type="text" id="edit_jam" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Pengajar (Ustadzah)</label>
+            <input type="text" id="edit_pengajar" class="form-control" required>
+          </div>
+          <button type="submit" id="btnEditSubmit" class="btn btn-warning w-100 fw-bold">Update Jadwal</button>
+        </form>
+        <div id="editAlert" class="mt-2"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // MASUKKAN ID SPREADSHEET DAN URL APPS SCRIPT ANDA DI SINI
+  const SHEET_ID = '1dY9LJCcRbMjqpsHnfyb-_V6TWwESx7HlmunKgkiZfLQ';
+  const SHEET_NAME = 'Jadwal';
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwfy9vkz3SJB--u0WMH3vzauze1qUpDYnwjjHJ1zXqNXHE5FPeKEsoZ8bgTNgjQ86wM/exec';
+
+  let rawData = [];
+  let modalInstance = null;
+
+  document.addEventListener("DOMContentLoaded", () => {
+    modalInstance = new bootstrap.Modal(document.getElementById('editModal'));
+    loadJadwal();
+  });
+
+  function loadJadwal() {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Jadwal`;
+    fetch(url)
+      .then(res => res.text())
+      .then(rep => {
+        const jsonString = rep.substring(47, rep.length - 2);
+        const data = JSON.parse(jsonString);
+        
+        rawData = data.table.rows.map(r => ({
+          id: r.c[0] ? r.c[0].v : '',
+          ruangan: r.c[1] ? String(r.c[1].v).trim() : '',
+          hari: r.c[2] ? String(r.c[2].v).trim() : '',
+          jam: r.c[3] ? String(r.c[3].v).trim() : '',
+          pengajar: r.c[4] ? String(r.c[4].v).trim() : ''
+        }));
+
+        renderManageTable(rawData);
+      });
+  }
+
+  function renderManageTable(data) {
+    const body = document.getElementById("manageTableBody");
+    body.innerHTML = "";
+
+    if (data.length === 0) {
+      body.innerHTML = `<tr><td colspan="5" class="text-center py-3 text-muted">Belum ada data jadwal.</td></tr>`;
+      return;
+    }
+
+    data.forEach(item => {
+      let tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td class="fw-bold">${item.ruangan}</td>
+        <td>${item.hari}</td>
+        <td><span class="badge bg-light text-dark border">${item.jam}</span></td>
+        <td>${item.pengajar}</td>
+        <td class="text-center">
+          <button class="btn btn-sm btn-outline-warning me-1" onclick="openEditModal('${item.id}', '${item.ruangan}', '${item.hari}', '${item.jam}', '${item.pengajar}')"><i class="fa-solid fa-pen"></i></button>
+          <button class="btn btn-sm btn-outline-danger" onclick="deleteJadwal('${item.id}')"><i class="fa-solid fa-trash"></i></button>
+        </td>
+      `;
+      body.appendChild(tr);
+    });
+  }
+
+  function filterJadwal() {
+    let keyword = document.getElementById("searchInput").value.toLowerCase();
+    let filtered = rawData.filter(d => 
+      d.pengajar.toLowerCase().includes(keyword) || 
+      d.ruangan.toLowerCase().includes(keyword) ||
+      d.hari.toLowerCase().includes(keyword)
+    );
+    renderManageTable(filtered);
+  }
+
+  function openEditModal(id, ruangan, hari, jam, pengajar) {
+    document.getElementById("edit_id").value = id;
+    document.getElementById("edit_ruangan").value = ruangan;
+    document.getElementById("edit_hari").value = hari;
+    document.getElementById("edit_jam").value = jam;
+    document.getElementById("edit_pengajar").value = pengajar;
+    modalInstance.show();
+  }
+
+  function submitForm(e, action) {
+    e.preventDefault();
+    const isAdd = action === 'add';
+    const btn = document.getElementById(isAdd ? 'btnAddSubmit' : 'btnEditSubmit');
+    const alertDiv = document.getElementById(isAdd ? 'addAlert' : 'editAlert');
+    
+    btn.disabled = true;
+    btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Memproses...`;
+
+    const payload = {
+      action: action,
+      id: isAdd ? '' : document.getElementById("edit_id").value,
+      ruangan: document.getElementById(isAdd ? "add_ruangan" : "edit_ruangan").value,
+      hari: document.getElementById(isAdd ? "add_hari" : "edit_hari").value,
+      jam: document.getElementById(isAdd ? "add_jam" : "edit_jam").value,
+      pengajar: document.getElementById(isAdd ? "add_pengajar" : "edit_pengajar").value
+    };
+
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(res => {
+      btn.disabled = false;
+      btn.innerHTML = isAdd ? `<i class="fa-solid fa-paper-plane me-1"></i> Simpan Jadwal` : `Update Jadwal`;
+      alertDiv.innerHTML = `<div class="alert alert-success py-2 small">${res.message}</div>`;
+      
+      if (isAdd) document.getElementById("addForm").reset();
+      else setTimeout(() => modalInstance.hide(), 1000);
+      
+      loadJadwal();
+      setTimeout(() => alertDiv.innerHTML = "", 3000);
+    });
+  }
+
+  function deleteJadwal(id) {
+    if (!confirm("Apakah Anda yakin ingin menghapus jadwal ini?")) return;
+
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'delete', id: id })
+    })
+    .then(res => res.json())
+    .then(res => {
+      alert(res.message);
+      loadJadwal();
+    });
+  }
+</script>
+</body>
+</html>
