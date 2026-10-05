@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jadwal Ruangan KBM Reguler</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    .header-box { background: linear-gradient(135deg, #0d6efd, #0dcaf0); color: white; border-radius: 12px; padding: 20px; }
+    .schedule-card { background: #ffffff; border-left: 4px solid #0d6efd; padding: 8px 10px; margin-bottom: 8px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .badge-time { background-color: #e7f1ff; color: #0d6efd; border: 1px solid #b6d4fe; font-weight: 600; font-size: 0.8rem; }
+    .table-responsive { border-radius: 10px; overflow: hidden; }
+  </style>
+</head>
+<body>
+
+<div class="container py-4">
+  <div class="header-box text-center mb-4 shadow">
+    <h2 class="fw-bold mb-1"><i class="fa-solid fa-calendar-days me-2"></i>JADWAL RUANGAN KBM REGULER</h2>
+    <p class="mb-0 opacity-75">Sistem Informasi Penggunaan Ruang Kelas</p>
+  </div>
+
+  <div class="card border-0 shadow-sm p-3 mb-4">
+    <div class="row g-2">
+      <div class="col-md-8">
+        <input type="text" id="searchInput" class="form-control" placeholder="Cari Ustadzah / Ruangan / Hari..." onkeyup="filterJadwal()">
+      </div>
+      <div class="col-md-4 text-end">
+        <button class="btn btn-primary w-100" onclick="fetchJadwalDirect()"><i class="fa-solid fa-rotate me-1"></i> Refresh Data</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card border-0 shadow-sm p-3">
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle mb-0">
+        <thead class="table-dark text-center">
+          <tr>
+            <th style="width: 10%;">Ruang</th>
+            <th style="width: 18%;">Senin</th>
+            <th style="width: 18%;">Selasa</th>
+            <th style="width: 18%;">Rabu</th>
+            <th style="width: 18%;">Kamis</th>
+            <th style="width: 18%;">Jumat</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr><td colspan="6" class="text-center py-4">Memuat data jadwal...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  // MASUKKAN ID SPREADSHEET GOOGLE SHEET ANDA DI SINI
+  const SHEET_ID = '1dY9LJCcRbMjqpsHnfyb-_V6TWwESx7HlmunKgkiZfLQ';
+  const SHEET_NAME = 'Jadwal';
+  
+  const HARI_LIST = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat"];
+  const RUANG_LIST = ["RQ 1", "RQ 2", "RQ 3", "RQ 4", "RQ 5", "RQ 6", "RQ 7"];
+  let rawData = [];
+
+  document.addEventListener("DOMContentLoaded", fetchJadwalDirect);
+
+  function fetchJadwalDirect() {
+    document.getElementById("tableBody").innerHTML = `<tr><td colspan="6" class="text-center py-4"><div class="spinner-border text-primary" role="status"></div><br>Memuat data...</td></tr>`;
+    
+    // Query langsung ke Google Sheet gviz API
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
+
+    fetch(url)
+      .then(res => res.text())
+      .then(rep => {
+        // Cleaning format JSONP bawaan Google API
+        const jsonString = rep.substring(47, rep.length - 2);
+        const data = JSON.parse(jsonString);
+        
+        const rows = data.table.rows;
+        rawData = rows.map(r => ({
+          ruangan: r.c[0] ? String(r.c[0].v).trim() : '',
+          hari: r.c[1] ? String(r.c[1].v).trim() : '',
+          jam: r.c[2] ? String(r.c[2].v).trim() : '',
+          pengajar: r.c[3] ? String(r.c[3].v).trim() : ''
+        }));
+
+        renderTable(rawData);
+      })
+      .catch(err => {
+        document.getElementById("tableBody").innerHTML = `<tr><td colspan="6" class="text-center text-danger py-4">Gagal memuat data. Pastikan Sheet ID benar dan akses Sheet di-set "Anyone with the link can view".</td></tr>`;
+      });
+  }
+
+  function renderTable(data) {
+    const body = document.getElementById("tableBody");
+    body.innerHTML = "";
+
+    RUANG_LIST.forEach(ruang => {
+      let tr = document.createElement("tr");
+      let tdRuang = `<td class="fw-bold text-center bg-light">${ruang}</td>`;
+      
+      let tdHariHtml = HARI_LIST.map(hari => {
+        let items = data.filter(d => d.ruangan.toLowerCase() === ruang.toLowerCase() && d.hari.toLowerCase() === hari.toLowerCase());
+        if (items.length === 0) return `<td class="align-top"></td>`;
+        
+        let content = items.map(item => `
+          <div class="schedule-card">
+            <div class="fw-bold text-dark">${item.pengajar}</div>
+            <span class="badge badge-time mt-1"><i class="fa-regular fa-clock me-1"></i>${item.jam}</span>
+          </div>
+        `).join("");
+        
+        return `<td class="align-top">${content}</td>`;
+      }).join("");
+
+      tr.innerHTML = tdRuang + tdHariHtml;
+      body.appendChild(tr);
+    });
+  }
+
+  function filterJadwal() {
+    let keyword = document.getElementById("searchInput").value.toLowerCase();
+    let filtered = rawData.filter(d => 
+      d.pengajar.toLowerCase().includes(keyword) || 
+      d.ruangan.toLowerCase().includes(keyword) ||
+      d.hari.toLowerCase().includes(keyword)
+    );
+    renderTable(filtered);
+  }
+</script>
+</body>
+</html>
