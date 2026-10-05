@@ -11,21 +11,11 @@
     .header-box { background: linear-gradient(135deg, #0d6efd, #0dcaf0); color: white; border-radius: 12px; padding: 20px; }
     .schedule-card { background: #ffffff; border-left: 4px solid #0d6efd; padding: 8px 10px; margin-bottom: 8px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
     .badge-time { background-color: #e7f1ff; color: #0d6efd; border: 1px solid #b6d4fe; font-weight: 600; font-size: 0.8rem; }
-
-/* Cari bagian ini dan sesuaikan */
-    .table-responsive { 
-      border-radius: 10px; 
-      overflow-x: auto; /* Memastikan scroll horizontal aktif */
-      -webkit-overflow-scrolling: touch; /* Memperhalus scroll di iOS/Safari */
-    }
-    
-    /* Tambahkan aturan ini di bawahnya */
-    .table-responsive table {
-      min-width: 700px; /* Memaksa tabel memiliki lebar minimal agar bisa digeser */
-    }
-    </style>
+    .table-responsive { border-radius: 10px; overflow: hidden; }
+  </style>
 </head>
 <body>
+
 <div class="container py-4">
   <div class="header-box text-center mb-4 shadow">
     <h2 class="fw-bold mb-1"><i class="fa-solid fa-calendar-days me-2"></i>JADWAL RUANGAN KBM REGULER</h2>
@@ -78,22 +68,22 @@
   function fetchJadwalDirect() {
     document.getElementById("tableBody").innerHTML = `<tr><td colspan="6" class="text-center py-4"><div class="spinner-border text-primary" role="status"></div><br>Memuat data...</td></tr>`;
     
-    // Query langsung ke Google Sheet gviz API
     const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
 
     fetch(url)
       .then(res => res.text())
       .then(rep => {
-        // Cleaning format JSONP bawaan Google API
         const jsonString = rep.substring(47, rep.length - 2);
         const data = JSON.parse(jsonString);
         
         const rows = data.table.rows;
+        // Perubahan Indeks: r.c[1]=Ruangan, r.c[2]=Hari, r.c[3]=Jam, r.c[4]=Pengajar (karena r.c[0] adalah ID)
         rawData = rows.map(r => ({
-          ruangan: r.c[0] ? String(r.c[0].v).trim() : '',
-          hari: r.c[1] ? String(r.c[1].v).trim() : '',
-          jam: r.c[2] ? String(r.c[2].v).trim() : '',
-          pengajar: r.c[3] ? String(r.c[3].v).trim() : ''
+          id: r.c[0] ? r.c[0].v : '',
+          ruangan: r.c[1] ? String(r.c[1].v).trim() : '',
+          hari: r.c[2] ? String(r.c[2].v).trim() : '',
+          jam: r.c[3] ? String(r.c[3].v).trim() : '',
+          pengajar: r.c[4] ? String(r.c[4].v).trim() : ''
         }));
 
         renderTable(rawData);
