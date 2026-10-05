@@ -11,11 +11,18 @@
     .header-box { background: linear-gradient(135deg, #0d6efd, #0dcaf0); color: white; border-radius: 12px; padding: 20px; }
     .schedule-card { background: #ffffff; border-left: 4px solid #0d6efd; padding: 8px 10px; margin-bottom: 8px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
     .badge-time { background-color: #e7f1ff; color: #0d6efd; border: 1px solid #b6d4fe; font-weight: 600; font-size: 0.8rem; }
-    .table-responsive { border-radius: 10px; overflow: hidden; }
-  </style>
-</head>
-<body>
 
+/* Cari bagian ini dan sesuaikan */
+.table-responsive { 
+  border-radius: 10px; 
+  overflow-x: auto; /* Memastikan scroll horizontal aktif */
+  -webkit-overflow-scrolling: touch; /* Memperhalus scroll di iOS/Safari */
+}
+
+/* Tambahkan aturan ini di bawahnya */
+.table-responsive table {
+  min-width: 700px; /* Memaksa tabel memiliki lebar minimal agar bisa digeser */
+}
 <div class="container py-4">
   <div class="header-box text-center mb-4 shadow">
     <h2 class="fw-bold mb-1"><i class="fa-solid fa-calendar-days me-2"></i>JADWAL RUANGAN KBM REGULER</h2>
